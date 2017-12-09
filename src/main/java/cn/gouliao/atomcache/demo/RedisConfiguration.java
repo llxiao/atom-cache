@@ -22,11 +22,11 @@ import redis.clients.jedis.JedisPoolConfig;
 public class RedisConfiguration {
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
-        String redisServer = "127.0.0.1";
-        String redisPort = "2181";
+        String redisServer = "192.168.1.122";
+        String redisPort = "6379";
         String redisPwd = "ycc123456";
         JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
-        jedisConnectionFactory.setDatabase(6);
+        jedisConnectionFactory.setDatabase(8);
         jedisConnectionFactory.setHostName(redisServer);
         jedisConnectionFactory.setPassword(redisPwd);
         jedisConnectionFactory.setPort(Integer.parseInt(redisPort));
@@ -71,9 +71,7 @@ public class RedisConfiguration {
     public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
 
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         redisTemplate.afterPropertiesSet();

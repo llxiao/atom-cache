@@ -16,13 +16,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TestServiceImpl {
 
-    @AtomCache(cacheKey = "client_", targetClass = String.class, cacheMethod = ATOM_CACHE_METHOD.FIND)
+    @AtomCache(cacheKey = "client", targetClass = String.class, cacheMethod = ATOM_CACHE_METHOD.FIND)
     public String findByID(@AtomParam String ID) {
         System.out.println("getFromDB");
         return "1698741";
     }
 
-    @AtomCache(cacheKey = "client_", targetClass = String.class, cacheMethod = ATOM_CACHE_METHOD.DELETE)
+    @AtomCache(cacheKey = "client", targetClass = String.class, cacheMethod = ATOM_CACHE_METHOD.DELETE)
     public String updateByID(@AtomParam String ID) {
         System.out.println("removeCache");
         return "1698741";

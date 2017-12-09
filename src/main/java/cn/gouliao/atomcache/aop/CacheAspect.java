@@ -85,7 +85,9 @@ public class CacheAspect {
                     cacheGetObj = realSet;
                 } else {
                     Object findObj = this.get(serviceList, cacheKey);
-                    cacheGetObj = SerializeUtils.deserialize(findObj, classz);
+                    if (findObj != null) {
+                        cacheGetObj = SerializeUtils.deserialize(findObj, classz);
+                    }
                 }
 
             }
@@ -135,6 +137,7 @@ public class CacheAspect {
         }
         return null;
     }
+
     @Autowired
     public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
