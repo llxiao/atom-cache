@@ -17,5 +17,5 @@ public interface IGetCacheKey {
      *
      * @return 根据业务需求
      */
-    void getPreCacheKey();
+    String getCacheKey();
 }

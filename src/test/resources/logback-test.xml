@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<configuration scan="false">
+
+    <!-- properties -->
+    <!--<property name="logDir" value="${user.home}/logs/xiezhu" />-->
+    <property name="logDir" value="${catalina.base}/logs" />
+    <property name="maxHistory" value="30" />
+
+
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>
+                %d{yyyy/MM/dd-HH:mm:ss.SSS,GMT+8} [%-10.10thread] %-5level  %class{36}_%M %replace(%caller{1}){'(\bCaller.+?(?=\())|\r|\n|\s*|\t', ''} - %msg%n
+            </pattern>
+            <charset class="java.nio.charset.Charset">UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 滚动文件输出, RollingFileAppender -->
+    <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 日志过滤器 LevelFilter -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+            <!-- 只写入DEBUG级别的日志信息 -->
+        </filter>
+        <!-- 滚动策略 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 以天为单位记录日志, 只保留30天 -->
+            <fileNamePattern>${logDir}/%d{yyyy-MM-dd}/debug-log.log</fileNamePattern>
+            <maxHistory>${maxHistory}</maxHistory>
+        </rollingPolicy>
+        <triggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>200MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>
+                %d{yyyy/MM/dd-HH:mm:ss.SSS,GMT+8} [%-22.22thread] %-5level %class{36}_%M %L %logger{50} - %msg%n
+            </pattern>
+            <charset class="java.nio.charset.Charset">UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 日志过滤器 ThresholdFilter -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <!-- 只记录WARN及以上级别的日志. 即WARN, ERROR.  -->
+            <level>WARN</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logDir}/%d{yyyy-MM-dd}/warn-log.log</fileNamePattern>
+            <maxHistory>${maxHistory}</maxHistory>
+        </rollingPolicy>
+        <triggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>500MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>
+                %d{yyyy/MM/dd-HH:mm:ss.SSS,GMT+8} [%-22.22thread] %-5level %class{36}_%M %L %logger{50} - %msg%n
+            </pattern>
+            <charset class="java.nio.charset.Charset">UTF-8</charset>
+        </encoder>
+    </appender>
+
+
+    <appender name="ASYNC_OUT" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 如果队列元素超过容量80%，丢掉WARN级别以下的新日志 -->
+        <queueSize>65536</queueSize>
+        <appender-ref ref="STDOUT" />
+        <!-- add the following line -->
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <!-- root, 只有在level及以上级别的日志会被输出 -->
+    <!-- 例如: 当root level设置为INFO时, appender DEBUG中无法获取到DEBUG级别的日志事件, 则DEBUG日志信息也不会写入debug.log中. -->
+    <root level="INFO">
+        <appender-ref ref="ASYNC_OUT" />
+        <appender-ref ref="DEBUG" />
+        <appender-ref ref="WARN" />
+    </root>
+
+</configuration>

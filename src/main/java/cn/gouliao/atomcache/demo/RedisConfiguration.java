@@ -1,13 +1,12 @@
 package cn.gouliao.atomcache.demo;
 
+import cn.gouliao.atomcache.aop.CacheAspect;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-import cn.gouliao.atomcache.aop.CacheAspect;
 import redis.clients.jedis.JedisPoolConfig;
 
 /**
@@ -22,7 +21,7 @@ import redis.clients.jedis.JedisPoolConfig;
 public class RedisConfiguration {
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
-        String redisServer = "192.168.1.122";
+        String redisServer = "127.0.0.1";
         String redisPort = "6379";
         String redisPwd = "ycc123456";
         JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
@@ -71,7 +70,9 @@ public class RedisConfiguration {
     public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
 
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         redisTemplate.afterPropertiesSet();

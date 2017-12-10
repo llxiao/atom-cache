@@ -1,17 +1,10 @@
 package cn.gouliao.atomcache.annotation;
 
-import com.sun.istack.internal.NotNull;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 import cn.gouliao.atomcache.common.ATOM_CACHE_LEVEL;
 import cn.gouliao.atomcache.common.ATOM_CACHE_METHOD;
-import cn.gouliao.atomcache.common.ATOM_CACHE_RETURN_TYPE;
+import com.sun.istack.internal.NotNull;
+
+import java.lang.annotation.*;
 
 /**
  * AtomCache的注解, 需要Cache的时候放一个此注解到方法之上
@@ -43,13 +36,6 @@ public @interface AtomCache {
      */
     ATOM_CACHE_LEVEL cacheType() default ATOM_CACHE_LEVEL.BOTH_REDIS_AND_GUAVA;
 
-    /**
-     * 缓存存放的cacheKey前缀
-     *
-     * @return 缓存存放的cacheKey前缀
-     */
-    @NotNull
-    String cacheKey();
 
     /**
      * 缓存时间 针对redis
@@ -59,18 +45,5 @@ public @interface AtomCache {
     long expire() default 0L;
 
 
-    /**
-     * 查找的管理类型
-     *
-     * @return 返回的对象类型
-     */
-    @NotNull
-    Class targetClass();
 
-    /**
-     * 返回值类型
-     *
-     * @return 默认为object
-     */
-    ATOM_CACHE_RETURN_TYPE returnType() default ATOM_CACHE_RETURN_TYPE.NOT_SET_COLLECTION;
 }

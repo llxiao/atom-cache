@@ -1,17 +1,15 @@
 package cn.gouliao.atomcache.service.impl;
 
+import cn.gouliao.atomcache.common.GuavaConfig;
+import cn.gouliao.atomcache.service.IAtomNormalCache;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
-import cn.gouliao.atomcache.common.GuavaConfig;
-import cn.gouliao.atomcache.service.IAtomNormalCache;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
@@ -98,7 +96,8 @@ public class GuavaCacheImpl implements IAtomNormalCache {
         }
         Object object = cache.getIfPresent(cacheKey);
         if (null == object){
-            log.warn("cacheKey={} 在guavaCache不存在");
+            log.warn("cacheKey={} 在guavaCache不存在",cacheKey);
+
         }
         return object;
     }
