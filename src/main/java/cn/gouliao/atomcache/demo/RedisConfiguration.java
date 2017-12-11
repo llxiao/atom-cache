@@ -79,6 +79,7 @@ public class RedisConfiguration {
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
+
     }
 
     @Bean
