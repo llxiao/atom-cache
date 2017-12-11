@@ -33,7 +33,7 @@ public class CacheTest {
     public void testFind() {
         Student entity = new Student.Builder().withStudentID("102").build();
         RateLimiter rateLimiter = RateLimiter.create(2);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 2; i++) {
             rateLimiter.acquire();
             Student byID = testService.findByID(entity);
             log.info("findByID{}={}",i,byID);

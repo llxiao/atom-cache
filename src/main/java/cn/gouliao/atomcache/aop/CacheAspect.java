@@ -1,13 +1,7 @@
 package cn.gouliao.atomcache.aop;
 
-import cn.gouliao.atomcache.annotation.AtomCache;
-import cn.gouliao.atomcache.annotation.AtomParam;
-import cn.gouliao.atomcache.common.ATOM_CACHE_LEVEL;
-import cn.gouliao.atomcache.common.ATOM_CACHE_METHOD;
-import cn.gouliao.atomcache.needimpl.IGetCacheKey;
-import cn.gouliao.atomcache.service.ServiceMange;
 import com.xiaoleilu.hutool.util.StrUtil;
-import lombok.extern.slf4j.Slf4j;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -20,6 +14,14 @@ import org.springframework.stereotype.Component;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
+import cn.gouliao.atomcache.annotation.AtomCache;
+import cn.gouliao.atomcache.annotation.AtomParam;
+import cn.gouliao.atomcache.common.ATOM_CACHE_LEVEL;
+import cn.gouliao.atomcache.common.ATOM_CACHE_METHOD;
+import cn.gouliao.atomcache.needimpl.IGetCacheKey;
+import cn.gouliao.atomcache.service.ServiceMange;
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * <p>
  * 类说明
@@ -30,20 +32,22 @@ import java.lang.reflect.Method;
  */
 @Aspect
 @Slf4j
-@Component
 public class CacheAspect {
 
     private RedisTemplate<String, Object> redisTemplate;
 
 
-    //设置切片位置
+    /**
+     * 设置切片位置
+     */
     @Pointcut("@annotation(cn.gouliao.atomcache.annotation.AtomCache)")
     public void setJoinPoint() {
     }
 
-    //环绕通知
+    /**
+     * 环绕通知
+     */
     @Around(value = "setJoinPoint()")
-    @SuppressWarnings("unchecked")
     public Object aroundMethod(ProceedingJoinPoint joinPoint) throws Throwable {
         Object result;
         Object[] args = joinPoint.getArgs();
@@ -73,7 +77,7 @@ public class CacheAspect {
                 if (result != null) {
                     return result;
                 }
-            }else if(cacheMethod == ATOM_CACHE_METHOD.DELETE){
+            } else if (cacheMethod == ATOM_CACHE_METHOD.DELETE) {
                 mange.remove(cacheKey);
             }
         }
@@ -83,7 +87,7 @@ public class CacheAspect {
         //如果是删除的 就去删除缓存
         if (StrUtil.isNotBlank(cacheKey)) {
             if (cacheMethod == ATOM_CACHE_METHOD.FIND) {
-                mange.put(cacheKey,result,expireTime);
+                mange.put(cacheKey, result, expireTime);
             }
         }
         return result;

@@ -33,7 +33,6 @@ public class CacheNameUtil {
         } else {
             String s = !ArrayUtil.isEmpty(params) && !StrUtil.isBlank(template) ? StrFormatter.format(template.toString(), params) : template.toString();
             String returnStr = StrUtil.format("ATOM_CACHE_{}", s);
-            log.info("cacheKey=>:{}", returnStr);
             return returnStr;
         }
     }

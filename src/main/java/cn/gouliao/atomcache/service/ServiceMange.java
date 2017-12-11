@@ -56,6 +56,11 @@ public class ServiceMange {
                 refreshCache = cache;
             }
             if (returnObj != null) {
+                if (needRefreshGuava) {
+                    log.info("get cacheKey={} from redis cache", key);
+                }else {
+                    log.info("get cacheKey={} from guava cache", key);
+                }
                 break;
             }
         }
