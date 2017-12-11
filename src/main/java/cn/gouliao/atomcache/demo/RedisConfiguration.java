@@ -7,6 +7,8 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import cn.gouliao.atomcache.service.impl.CommonRedisServiceImpl;
 import redis.clients.jedis.JedisPoolConfig;
 
 /**
@@ -19,19 +21,7 @@ import redis.clients.jedis.JedisPoolConfig;
  */
 @Configuration
 public class RedisConfiguration {
-    @Bean
-    public JedisConnectionFactory redisConnectionFactory() {
-        String redisServer = "127.0.0.1";
-        String redisPort = "6379";
-        String redisPwd = "ycc123456";
-        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
-        jedisConnectionFactory.setDatabase(8);
-        jedisConnectionFactory.setHostName(redisServer);
-        jedisConnectionFactory.setPassword(redisPwd);
-        jedisConnectionFactory.setPort(Integer.parseInt(redisPort));
-        jedisConnectionFactory.setPoolConfig(jedisPoolConfig());
-        return jedisConnectionFactory;
-    }
+
 
     @Bean
     public JedisPoolConfig jedisPoolConfig() {
@@ -52,7 +42,6 @@ public class RedisConfiguration {
         boolean redisTestOnBorrow = true;
         //在空闲时检查有效性, 默认false
         boolean redisTestWhileIdle = true;
-
         jedisPoolConfig.setMaxIdle(redisMaxIdle);
         jedisPoolConfig.setMaxTotal(redisMaxTotal);
         jedisPoolConfig.setMaxWaitMillis(redisMaxWaitMillis);
@@ -62,7 +51,20 @@ public class RedisConfiguration {
         jedisPoolConfig.setTestOnBorrow(redisTestOnBorrow);
         jedisPoolConfig.setTestWhileIdle(redisTestWhileIdle);
         return jedisPoolConfig;
+    }
 
+    @Bean
+    public JedisConnectionFactory redisConnectionFactory() {
+        String redisServer = "192.168.1.122";
+        String redisPort = "6379";
+        String redisPwd = "ycc123456";
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
+        jedisConnectionFactory.setDatabase(8);
+        jedisConnectionFactory.setHostName(redisServer);
+        jedisConnectionFactory.setPassword(redisPwd);
+        jedisConnectionFactory.setPort(Integer.parseInt(redisPort));
+        jedisConnectionFactory.setPoolConfig(jedisPoolConfig());
+        return jedisConnectionFactory;
     }
 
 
@@ -84,5 +86,12 @@ public class RedisConfiguration {
         CacheAspect cacheAspect = new CacheAspect();
         cacheAspect.setRedisTemplate(redisTemplate());
         return cacheAspect;
+    }
+
+    @Bean(name = "commonRedisServiceImpl")
+    public CommonRedisServiceImpl getCommonRedisService(){
+        CommonRedisServiceImpl commonRedisService = new CommonRedisServiceImpl();
+        commonRedisService.setRedisTemplate(redisTemplate());
+        return commonRedisService;
     }
 }

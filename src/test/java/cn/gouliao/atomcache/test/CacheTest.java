@@ -3,6 +3,8 @@ package cn.gouliao.atomcache.test;
 import cn.gouliao.atomcache.demo.Student;
 import cn.gouliao.atomcache.demo.TestServiceImpl;
 import com.google.common.util.concurrent.RateLimiter;
+
+import cn.gouliao.atomcache.service.CommonRedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +27,8 @@ import javax.annotation.Resource;
 public class CacheTest {
     @Resource
     private TestServiceImpl testService;
-
+    @Resource
+    private CommonRedisService commonRedisService;
     @Test
     public void testFind() {
         Student entity = new Student.Builder().withStudentID("102").build();
@@ -45,6 +48,10 @@ public class CacheTest {
         testService.updateByID(entity);
 
 
+    }
+    @Test
+    public void testRedisUtil(){
+        commonRedisService.set("jjjjjjjjjjjjjjjjjjj","hhhhhhhhhhhhhhhhhhhh");
     }
 
 

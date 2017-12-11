@@ -149,5 +149,11 @@
         </pluginManagement>
     </build>
 
+    <developers>
+        <developer>
+            <name>Shawn</name>
+            <email>lxiao0126@163.com</email>
+        </developer>
+    </developers>
 
 </project>
