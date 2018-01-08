@@ -11,7 +11,7 @@ import java.util.Map;
  * @since 2017/12/9
  */
 
-public enum ATOM_CACHE_METHOD {
+public enum ATOM_CACHE_TYPE {
     /**
      * 查找 找到直接返回
      */
@@ -25,19 +25,19 @@ public enum ATOM_CACHE_METHOD {
     private static Map map = new HashMap();
 
     static {
-        for (ATOM_CACHE_METHOD pageType : ATOM_CACHE_METHOD.values()) {
+        for (ATOM_CACHE_TYPE pageType : ATOM_CACHE_TYPE.values()) {
             map.put(pageType.value, pageType);
         }
     }
 
     private int value;
 
-    private ATOM_CACHE_METHOD(int value) {
+    private ATOM_CACHE_TYPE(int value) {
         this.value = value;
     }
 
-    public static ATOM_CACHE_METHOD valueOf(int value) {
-        return (ATOM_CACHE_METHOD) map.get(value);
+    public static ATOM_CACHE_TYPE valueOf(int value) {
+        return (ATOM_CACHE_TYPE) map.get(value);
     }
 
     public int getValue() {

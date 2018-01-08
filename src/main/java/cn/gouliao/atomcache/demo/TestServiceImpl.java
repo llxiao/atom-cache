@@ -2,7 +2,7 @@ package cn.gouliao.atomcache.demo;
 
 import cn.gouliao.atomcache.annotation.AtomCache;
 import cn.gouliao.atomcache.annotation.AtomParam;
-import cn.gouliao.atomcache.common.ATOM_CACHE_METHOD;
+import cn.gouliao.atomcache.common.ATOM_CACHE_TYPE;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,7 +19,7 @@ import java.util.HashSet;
 @Slf4j
 public class TestServiceImpl {
 
-    @AtomCache(cacheMethod = ATOM_CACHE_METHOD.FIND)
+    @AtomCache(cacheMethod = ATOM_CACHE_TYPE.FIND)
     public Student findByID(@AtomParam Student entity) {
         Friend friend1 = new Friend.Builder().withFriendName("1111").build();
         Friend friend2 = new Friend.Builder().withFriendName("2222").build();
@@ -36,7 +36,7 @@ public class TestServiceImpl {
         return student;
     }
 
-    @AtomCache(cacheMethod = ATOM_CACHE_METHOD.DELETE)
+    @AtomCache(cacheMethod = ATOM_CACHE_TYPE.DELETE)
     public String updateByID(@AtomParam Student entity) {
         log.info("removeCache");
         return "1698741";

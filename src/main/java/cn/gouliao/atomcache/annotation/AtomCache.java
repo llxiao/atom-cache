@@ -1,7 +1,7 @@
 package cn.gouliao.atomcache.annotation;
 
 import cn.gouliao.atomcache.common.ATOM_CACHE_LEVEL;
-import cn.gouliao.atomcache.common.ATOM_CACHE_METHOD;
+import cn.gouliao.atomcache.common.ATOM_CACHE_TYPE;
 import com.sun.istack.internal.NotNull;
 
 import java.lang.annotation.*;
@@ -27,7 +27,7 @@ public @interface AtomCache {
      * @return 操作方法
      */
     @NotNull
-    ATOM_CACHE_METHOD cacheMethod();
+    ATOM_CACHE_TYPE cacheMethod();
 
     /**
      * 缓存的类型 默认使用redis和guava缓存,可以根据需求自定义

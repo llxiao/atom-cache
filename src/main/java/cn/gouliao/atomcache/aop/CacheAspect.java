@@ -9,7 +9,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -17,7 +16,7 @@ import java.lang.reflect.Method;
 import cn.gouliao.atomcache.annotation.AtomCache;
 import cn.gouliao.atomcache.annotation.AtomParam;
 import cn.gouliao.atomcache.common.ATOM_CACHE_LEVEL;
-import cn.gouliao.atomcache.common.ATOM_CACHE_METHOD;
+import cn.gouliao.atomcache.common.ATOM_CACHE_TYPE;
 import cn.gouliao.atomcache.needimpl.IGetCacheKey;
 import cn.gouliao.atomcache.service.ServiceMange;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +54,11 @@ public class CacheAspect {
         Method method = ms.getMethod();
         //获取到此方法上,此注解传递的参数
         AtomCache cacheAnnotation = method.getAnnotation(AtomCache.class);
-        ATOM_CACHE_METHOD cacheMethod = cacheAnnotation.cacheMethod();
+        if (cacheAnnotation == null) {
+            result = joinPoint.proceed();
+            return result;
+        }
+        ATOM_CACHE_TYPE cacheMethod = cacheAnnotation.cacheMethod();
         ATOM_CACHE_LEVEL cacheLevel = cacheAnnotation.cacheType();
         long expireTime = cacheAnnotation.expire();
 
@@ -72,23 +75,30 @@ public class CacheAspect {
         }
         ServiceMange mange = ServiceMange.getInstance(cacheLevel, redisTemplate);
         if (StrUtil.isNotBlank(cacheKey)) {
-            if (cacheMethod == ATOM_CACHE_METHOD.FIND) {
+            if (cacheMethod == ATOM_CACHE_TYPE.FIND) {
                 result = mange.get(cacheKey);
                 if (result != null) {
                     return result;
                 }
-            } else if (cacheMethod == ATOM_CACHE_METHOD.DELETE) {
+            } else if (cacheMethod == ATOM_CACHE_TYPE.DELETE) {
                 mange.remove(cacheKey);
             }
         }
 
         //没有命中缓存 继续执行
         result = joinPoint.proceed();
-        //如果是删除的 就去删除缓存
+
         if (StrUtil.isNotBlank(cacheKey)) {
-            if (cacheMethod == ATOM_CACHE_METHOD.FIND) {
-                mange.put(cacheKey, result, expireTime);
+            //如果是查询 并且查询结果不为null 则更新下缓存
+            if (cacheMethod == ATOM_CACHE_TYPE.FIND) {
+                if (result != null) {
+                    mange.put(cacheKey, result, expireTime);
+                }
+            } else if (cacheMethod == ATOM_CACHE_TYPE.DELETE) {
+                //如果是删除 则删除缓存
+                mange.remove(cacheKey);
             }
+
         }
         return result;
     }
